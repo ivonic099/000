@@ -1,8 +1,11 @@
-#bgmiddoserpython
 import telebot
 import subprocess
 import datetime
 import os
+import schedule
+import time
+import threading
+
 
 from keep_alive import keep_alive
 keep_alive()
@@ -363,9 +366,6 @@ def broadcast_message(message):
 
     bot.reply_to(message, response)
 
-import schedule
-import time
-import threading
 
 # Function to be executed every 1 minute
 def periodic_task():
