@@ -1,20 +1,11 @@
 #bgmiddoserpython
-import os
 import telebot
-import json
-import requests
-import logging
-import time
-from pymongo import MongoClient
-from datetime import datetime, timedelta
-import certifi
-import random
-from subprocess import Popen
-from threading import Thread
-import asyncio
-import aiohttp
-from telebot.types import ReplyKeyboardMarkup, KeyboardButton
+import subprocess
+import datetime
+import os
 
+from keep_alive import keep_alive
+keep_alive()
 # Insert your Telegram bot token here
 bot = telebot.TeleBot('7550748557:AAHI_by5yHaypqDSvPPag-iJVv5YMNzu8RY')
 
@@ -372,12 +363,37 @@ def broadcast_message(message):
 
     bot.reply_to(message, response)
 
+import schedule
+import time
+import threading
 
+# Function to be executed every 1 minute
+def periodic_task():
+    print("This task runs every 1 minute!")
+    # Add any task you want to perform every minute, like sending a message
+    bot.send_message(admin_id, "The bot is running smoothly!")  # Example: Send a message to the admin
 
+# Function to run the schedule
+def run_schedule():
+    # Schedule the periodic task every minute
+    schedule.every(1).minute.do(periodic_task)
+    
+    while True:
+        schedule.run_pending()  # Run pending tasks
+        time.sleep(1)  # Sleep to avoid high CPU usage
 
-#bot.polling()
+# Start the schedule in a separate thread
+def start_periodic_task():
+    threading.Thread(target=run_schedule, daemon=True).start()
+
+# Start the periodic task when the bot is initialized
+start_periodic_task()
+
+# Your bot's polling loop
 while True:
     try:
         bot.polling(none_stop=True)
     except Exception as e:
         print(e)
+        
+        
